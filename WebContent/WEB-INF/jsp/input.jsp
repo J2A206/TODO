@@ -14,6 +14,7 @@
 <body>
 <h1>TODOアプリケーション</h1>
 <h2>TODO入力</h2>
+<span style="color:red;">${errorMsg }</span>
 <form action="InputServlet" method="post">
 重要度:<select name="priority">
 <option value="5">5</option>
@@ -25,6 +26,7 @@
 内容:<input type="text" name="content"><br>
 期日:<input type="date" name="date"><br>
 <input type="submit" name="登録">
+<input type="button" value = "戻る" onclick="javascript:history.back();">
 </form>
 </body>
 </html>

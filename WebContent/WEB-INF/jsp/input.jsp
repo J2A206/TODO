@@ -25,8 +25,7 @@
 </select>
 内容:<input type="text" name="content"><br>
 期日:<input type="date" name="date"><br>
-<input type="submit" name="登録">
-<input type="button" value = "戻る" onclick="javascript:history.back();">
+<input type="submit" value="登録">
 </form>
 </body>
 </html>

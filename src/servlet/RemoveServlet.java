@@ -1,8 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,10 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import model.RemoveLogic;
-import model.Todo;
 
 @WebServlet("/RemoveServlet")
 public class RemoveServlet extends HttpServlet {
@@ -22,7 +18,7 @@ public class RemoveServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		int no = Integer.parseInt(request.getParameter("no"));
+		int no;
 		String errorMsg = "";
 
 		try {
@@ -33,19 +29,10 @@ public class RemoveServlet extends HttpServlet {
 			dispatcher.forward(request, response);
 			return;
 		}
-
-		HttpSession session = request.getSession();
-		List<Todo> todoList = (List<Todo>) session.getAttribute("todoList");
-		if (todoList == null) {
-			todoList = new ArrayList<Todo>();
-		}
-
 		RemoveLogic removeLogic = new RemoveLogic();
-		removeLogic.execute(no, todoList);
+		removeLogic.execute(no);
 
-		session.setAttribute("todoList", todoList);
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("ListServlet");
 		dispatcher.forward(request, response);
 
 	}

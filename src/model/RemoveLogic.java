@@ -1,11 +1,12 @@
 package model;
 
-import java.util.List;
+import dao.TodoDAO;
 
 public class RemoveLogic {
 
-	public void execute(int no, List<Todo> todoList) {
-		todoList.remove(no);
+	public void execute(int no) {
+		TodoDAO todoDAO = new TodoDAO();
+		todoDAO.delete(no);
 
 	}
 

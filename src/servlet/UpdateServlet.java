@@ -1,9 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,10 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import model.Todo;
-import model.TodoComparator;
 import model.UpdateLogic;
 
 @WebServlet("/UpdateServlet")
@@ -24,12 +19,14 @@ public class UpdateServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		int no = Integer.parseInt(request.getParameter("no"));
+
 		String priority = request.getParameter("priority");
 		String content = request.getParameter("content");
 		String date = request.getParameter("date");
 
+		int no;
 		String errorMsg = "";
+
 		if (content == null || content.length() == 0) {
 			errorMsg += "内容が入力されていません<br>";
 		}
@@ -38,27 +35,26 @@ public class UpdateServlet extends HttpServlet {
 		}
 		if (!errorMsg.equals("")) {
 			request.setAttribute("errorMsg", errorMsg);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/list.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("ListServlet");
 			dispatcher.forward(request, response);
 			return;
 		}
 
-		HttpSession session = request.getSession();
-		List<Todo> todoList = (List<Todo>) session.getAttribute("todoList");
-		if (todoList == null) {
-			todoList = new ArrayList<Todo>();
+		try {
+			no = Integer.parseInt(request.getParameter("no"));
+		} catch (NumberFormatException e) {
+			request.setAttribute("errorMsg", "TODOリストが存在しません");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("ListServlet");
+			dispatcher.forward(request, response);
+			return;
 		}
-		Todo todo = new Todo();
-		todo.setPriority(priority);
-		todo.setContent(content);
-		todo.setDate(date);
+
+		Todo todo = new Todo(no, priority, content, date);
+
 		UpdateLogic updateLogic = new UpdateLogic();
-		updateLogic.execute(no, todo, todoList);
+		updateLogic.execute(todo);
 
-		Collections.sort(todoList, new TodoComparator());
-		session.setAttribute("todoList", todoList);
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("ListServlet");
 		dispatcher.forward(request, response);
 
 	}

@@ -37,9 +37,9 @@
 	<hr>
 	<span style="color: red;">${errorMsg }</span>
 	<form action="UpdateServlet" method="post">
-		変更No:<select name="no" id="no" onload="selectboxChange();">
+		変更No:<select name="no" id="no" onchange="selectboxChange();">
 			<c:forEach var="todo" items="${todoList}" varStatus="status">
-				<option value="${status.index}">${ status.count }</option>
+				<option value="${todo.id}">${ status.count }</option>
 			</c:forEach>
 		</select> 重要度:<select name="priority" id="priority">
 			<option value="5">5</option>
@@ -58,7 +58,7 @@
 	<form action="RemoveServlet" method="post">
 		削除No:<select name="no">
 			<c:forEach var="todo" items="${todoList}" varStatus="status">
-				<option value="${status.index}">${ status.count }</option>
+				<option value="${todo.id}">${ status.count }</option>
 			</c:forEach>
 		</select> <input type="submit" value="削除">
 	</form>
@@ -83,7 +83,7 @@
 			//選択された変更NoからTODOリストのテーブルの行・列の値を取得し、変更情報としてinput要素のvalueに設定
 			document.getElementById("priority").options[(5 - table.rows[row].cells[1].innerText)].selected = true;
 			document.getElementById('content').value = table.rows[row].cells[2].innerText;
-			document.getElementById('deadline').value = table.rows[row].cells[3].innerText;
+			document.getElementById('date').value = table.rows[row].cells[3].innerText;
 		}
 	</script>
 </body>

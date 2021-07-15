@@ -1,9 +1,6 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import model.InputLogic;
 import model.Todo;
-import model.TodoComparator;
 import model.User;
 
 @WebServlet("/InputServlet")
@@ -56,22 +52,13 @@ public class InputServlet extends HttpServlet {
 		}
 
 		HttpSession session = request.getSession();
-		List<Todo> todoList = (List<Todo>)session.getAttribute("todoList");
-		if(todoList == null) {
-			todoList = new ArrayList<Todo>();
-		}
-		Todo todo = new Todo();
-		todo.setPriority(priority);
-		todo.setContent(content);
-		todo.setDate(date);
+		User user= (User)session.getAttribute("user");
+
+		Todo todo = new Todo(priority, content, date, user.getName());
 		InputLogic inputLogic = new InputLogic();
-		inputLogic.execute(todo, todoList);
+		inputLogic.execute(todo);
 
-		Collections.sort(todoList, new TodoComparator());
-		session.setAttribute("todoList", todoList);
-
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("ListServlet");
 		dispatcher.forward(request, response);
 
 
